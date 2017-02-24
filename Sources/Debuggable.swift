@@ -21,15 +21,19 @@ public protocol Debuggable: CustomDebugStringConvertible {
     /// A readable name for the error's Type. This is usually
     /// similar to the Type name of the error with spaces added.
     /// This will normally be printed proceeding the error's reason.
+    /// - note: For example, an error named `FooError` will have the
+    /// `readableName` `"Foo Error"`.
     static var readableName: String { get }
 
-    /// Some unique identifier for the error's Type.
-    /// note: This defaults to `ModuleName.TypeName`
-    /// This will be used to create the `identifier` property.
+    /// A unique identifier for the error's Type.
+    /// - note: This defaults to `ModuleName.TypeName`,
+    /// and is used to create the `identifier` property.
     static var typeIdentifier: String { get }
 
-    /// Some unique identifier for this specific error.
-    /// This will be used to create the `identifier` property.
+    /// A unique identifier for the error instance.
+    /// - note: This is used to create the `identifier` property,
+    /// does not have a default value, and must be provided by
+    /// conformers to `Debuggable`.
     var instanceIdentifier: String { get }
 
     /// The identifier that describes the specific error at hand
