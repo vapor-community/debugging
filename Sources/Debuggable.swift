@@ -18,15 +18,23 @@ public protocol Debuggable: CustomDebugStringConvertible {
 
     // MARK: Identifiers
 
+    /// A readable name for the error's Type. This is usually
+    /// similar to the Type name of the error with spaces added.
+    /// This will normally be printed proceeding the error's reason.
     static var readableName: String { get }
 
+    /// Some unique identifier for the error's Type.
+    /// note: This defaults to `ModuleName.TypeName`
+    /// This will be used to create the `identifier` property.
     static var typeIdentifier: String { get }
 
+    /// Some unique identifier for this specific error.
+    /// This will be used to create the `identifier` property.
     var instanceIdentifier: String { get }
 
-    /// The identifier that describes the error at hand in the form of
-    /// `Module.Type.value`.
-    /// - note: A default implementation returns `String(reflecting: self)`.
+    /// The identifier that describes the specific error at hand
+    /// for use in finding help online.
+    /// - note: Default returns typeIdentifier.instanceIdentifier
     var identifier: String { get }
 
     // MARK: Help
@@ -57,7 +65,7 @@ public protocol Debuggable: CustomDebugStringConvertible {
     var gitHubIssues: [String] { get }
 }
 
-// MARK: Optional
+// MARK: Optionals
 
 extension Debuggable {
     public var possibleCauses: [String] {
@@ -81,7 +89,7 @@ extension Debuggable {
     }
 }
 
-// MARK: Default
+// MARK: Defaults
 
 extension Debuggable {
     public static var typeIdentifier: String {
@@ -96,7 +104,6 @@ extension Debuggable {
         return printable
     }
 }
-
 
 
 // MARK: Representations
