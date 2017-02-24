@@ -112,9 +112,7 @@ extension Debuggable {
     /// A computed property returning a `String` that encapsulates
     /// why the error occurred, suggestions on how to fix the problem,
     /// and resources to consult in debugging (if these are available).
-    /// - note: Consult the implementation of `generateDebugDescription()`
-    /// in `Debuggable`'s protocol extension for details on how
-    /// `log` is constructed by default.
+    /// - note: This representation is best used with functions like print()
     public var printable: String {
         var print: [String] = []
 
