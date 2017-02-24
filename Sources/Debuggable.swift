@@ -1,6 +1,6 @@
 /// `Debuggable` provides an interface that allows a type
 /// to be more easily debugged in the case of an error.
-protocol Debuggable {
+public protocol Debuggable: CustomDebugStringConvertible {
     
     /// The reason for the error.
     /// Typical implementations will switch over `self`
@@ -15,11 +15,21 @@ protocol Debuggable {
     ///     // other cases
     ///     }
     var reason: String { get }
-    
+
+    // MARK: Identifiers
+
+    static var readableName: String { get }
+
+    static var typeIdentifier: String { get }
+
+    var instanceIdentifier: String { get }
+
     /// The identifier that describes the error at hand in the form of
     /// `Module.Type.value`.
     /// - note: A default implementation returns `String(reflecting: self)`.
     var identifier: String { get }
+
+    // MARK: Help
     
     /// A `String` array describing the possible causes of the error.
     /// - note: Defaults to an empty array.
@@ -45,87 +55,95 @@ protocol Debuggable {
     /// - note: Defaults to an empty array.
     /// Provide a custom implementation to a list of pertinent issues.
     var gitHubIssues: [String] { get }
+}
+
+// MARK: Optional
+
+extension Debuggable {
+    public var possibleCauses: [String] {
+        return []
+    }
     
+    public var suggestedFixes: [String] {
+        return []
+    }
+    
+    public var documentationLinks: [String] {
+        return []
+    }
+    
+    public var stackOverflowQuestions: [String] {
+        return []
+    }
+    
+    public var gitHubIssues: [String] {
+        return []
+    }
+}
+
+// MARK: Default
+
+extension Debuggable {
+    public static var typeIdentifier: String {
+        return String(reflecting: self)
+    }
+
+    public var identifier: String {
+        return "\(Self.typeIdentifier).\(instanceIdentifier)"
+    }
+
+    public var debugDescription: String {
+        return printable
+    }
+}
+
+
+
+// MARK: Representations
+
+extension Debuggable {
     /// A computed property returning a `String` that encapsulates
     /// why the error occurred, suggestions on how to fix the problem,
     /// and resources to consult in debugging (if these are available).
     /// - note: Consult the implementation of `generateDebugDescription()`
     /// in `Debuggable`'s protocol extension for details on how
     /// `log` is constructed by default.
-    var log: String { get }
-    
+    public var printable: String {
+        var print: [String] = []
+
+        print += "\(Self.readableName): \(reason)"
+        print += "Identifier: \(identifier)"
+
+        if !possibleCauses.isEmpty {
+            print += "Here are some possible causes: \(possibleCauses.bulletedList)"
+        }
+
+        if !suggestedFixes.isEmpty {
+            print += "These suggestions could address the issue: \(suggestedFixes.bulletedList)"
+        }
+
+        if !documentationLinks.isEmpty {
+            print += "Vapor's documentation talks about this: \(documentationLinks.bulletedList)"
+        }
+
+        if !stackOverflowQuestions.isEmpty {
+            print += "These Stack Overflow links might be helpful: \(stackOverflowQuestions.bulletedList)"
+        }
+
+        if !gitHubIssues.isEmpty {
+            print += "See these Github issues for discussion on this topic: \(gitHubIssues.bulletedList)"
+        }
+
+        return print.joined(separator: "\n\n")
+    }
 }
 
-extension Debuggable {
-    
-    var identifier: String {
-        return String(reflecting: self)
+func +=(lhs: inout [String], rhs: String) {
+    lhs.append(rhs)
+}
+
+extension Array where Element == String {
+    var bulletedList: String {
+        return map({ "\n- \($0)" }).joined()
     }
-    
-    var possibleCauses: [String] {
-        return []
-    }
-    
-    var suggestedFixes: [String] {
-        return []
-    }
-    
-    var documentationLinks: [String] {
-        return []
-    }
-    
-    var stackOverflowQuestions: [String] {
-        return []
-    }
-    
-    var gitHubIssues: [String] {
-        return []
-    }
-    
-    var log: String {
-        return generateDebugDescription()
-    }
-    
-    private func mapAndJoin<T: CustomStringConvertible>(resource: [T]) -> String {
-        return resource.map({ "\n- \($0)" }).joined()
-    }
-    
-    private func generateDebugDescription() -> String {
-        let debugString = "\(reason)\n"
-        let id = "\nIdentifier: \(identifier)\n"
-        var possibleCausesString = ""
-        var suggestedFixesString = ""
-        var documentationLinksString = ""
-        var stackOverflowQuestionsString = ""
-        var gitHubIssuesString = ""
-        
-        if !possibleCauses.isEmpty {
-            possibleCausesString = "\nHere are some possible causes: \(mapAndJoin(resource: possibleCauses))\n"
-        }
-        
-        if !suggestedFixes.isEmpty {
-            suggestedFixesString = "\nThese suggestions could address the issue: \(mapAndJoin(resource: suggestedFixes))\n"
-        }
-        
-        if !documentationLinks.isEmpty {
-            documentationLinksString = "\nVapor's documentation talks about this: \(mapAndJoin(resource: documentationLinks))\n"
-        }
-        
-        if !stackOverflowQuestions.isEmpty {
-            stackOverflowQuestionsString = "\nThese Stack Overflow links might be helpful: \(mapAndJoin(resource: stackOverflowQuestions))"
-        }
-        
-        if !gitHubIssues.isEmpty {
-            gitHubIssuesString = "\nSee these Github issues for discussion on this topic: \(mapAndJoin(resource: gitHubIssues))"
-        }
-        
-        return debugString +
-            id +
-            possibleCausesString +
-            suggestedFixesString +
-            documentationLinksString +
-            stackOverflowQuestionsString +
-            gitHubIssuesString
-    }
-    
 }
