@@ -1,6 +1,6 @@
 /// `Debuggable` provides an interface that allows a type
 /// to be more easily debugged in the case of an error.
-public protocol Debuggable: CustomDebugStringConvertible {
+public protocol Debuggable: Swift.Error, CustomDebugStringConvertible {
     /// A readable name for the error's Type. This is usually
     /// similar to the Type name of the error with spaces added.
     /// This will normally be printed proceeding the error's reason.
@@ -66,14 +66,6 @@ public protocol Debuggable: CustomDebugStringConvertible {
 // MARK: Optionals
 
 extension Debuggable {
-    public var possibleCauses: [String] {
-        return []
-    }
-    
-    public var suggestedFixes: [String] {
-        return []
-    }
-    
     public var documentationLinks: [String] {
         return []
     }
@@ -119,7 +111,8 @@ extension String {
             .joined(separator: [])
 
         let characters = Array(characterSequence)
-        var expanded = characters.first.flatMap { String($0) } ?? ""
+        guard var expanded = characters.first.flatMap({ String($0) }) else { return "" }
+        
         characters.suffix(from: 1).forEach { char in
             if char.isUppercase {
                 expanded.append(" ")
@@ -127,7 +120,7 @@ extension String {
 
             expanded.append(char)
         }
-        
+
         return expanded
     }
 }
@@ -183,6 +176,6 @@ extension Debuggable {
 
 extension Array where Element == String {
     var bulletedList: String {
-        return map({ "\n- \($0)" }).joined()
+        return map { "\n- \($0)" } .joined()
     }
 }
