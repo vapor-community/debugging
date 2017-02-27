@@ -1,8 +1,8 @@
+import Debugging
+
 enum FooError: String, Error {
     case noFoo
 }
-
-import Debugging
 
 extension FooError: Debuggable {
     static var readableName: String {

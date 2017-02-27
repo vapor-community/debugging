@@ -1,5 +1,5 @@
 import XCTest
-@testable import debuggingTests
+@testable import DebuggingTests
 
 XCTMain([
     testCase(FooErrorTests.allTests),
