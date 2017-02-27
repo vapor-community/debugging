@@ -9,7 +9,7 @@ extension FooError: Debuggable {
         return "Foo Error"
     }
 
-    var instanceIdentifier: String {
+    var identifier: String {
         return rawValue
     }
 

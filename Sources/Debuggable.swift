@@ -1,7 +1,13 @@
 /// `Debuggable` provides an interface that allows a type
 /// to be more easily debugged in the case of an error.
 public protocol Debuggable: CustomDebugStringConvertible {
-    
+    /// A readable name for the error's Type. This is usually
+    /// similar to the Type name of the error with spaces added.
+    /// This will normally be printed proceeding the error's reason.
+    /// - note: For example, an error named `FooError` will have the
+    /// `readableName` `"Foo Error"`.
+    static var readableName: String { get }
+
     /// The reason for the error.
     /// Typical implementations will switch over `self`
     /// and return a friendly `String` describing the error.
@@ -18,27 +24,15 @@ public protocol Debuggable: CustomDebugStringConvertible {
 
     // MARK: Identifiers
 
-    /// A readable name for the error's Type. This is usually
-    /// similar to the Type name of the error with spaces added.
-    /// This will normally be printed proceeding the error's reason.
-    /// - note: For example, an error named `FooError` will have the
-    /// `readableName` `"Foo Error"`.
-    static var readableName: String { get }
-
     /// A unique identifier for the error's Type.
     /// - note: This defaults to `ModuleName.TypeName`,
     /// and is used to create the `identifier` property.
     static var typeIdentifier: String { get }
-
-    /// A unique identifier for the error instance.
-    /// - note: This is used to create the `identifier` property,
-    /// does not have a default value, and must be provided by
-    /// conformers to `Debuggable`.
-    var instanceIdentifier: String { get }
-
-    /// The identifier that describes the specific error at hand
-    /// for use in finding help online.
-    /// - note: Default returns typeIdentifier.instanceIdentifier
+    
+    /// Some unique identifier for this specific error.
+    /// This will be used to create the `identifier` property.
+    /// Do NOT use `String(reflecting: self)` or `String(describing: self)`
+    /// or there will be infinite recursion
     var identifier: String { get }
 
     // MARK: Help
@@ -93,19 +87,59 @@ extension Debuggable {
     }
 }
 
+extension Debuggable {
+    public var fullIdentifier: String {
+        return Self.typeIdentifier + "." + identifier
+    }
+}
+
 // MARK: Defaults
 
 extension Debuggable {
+    /// Default implementation of readable name that expands
+    /// SomeModule.MyType.Error => My Type Error
+    public static var readableName: String {
+        return typeIdentifier.readableTypeName()
+    }
+
     public static var typeIdentifier: String {
         return String(reflecting: self)
     }
 
-    public var identifier: String {
-        return "\(Self.typeIdentifier).\(instanceIdentifier)"
-    }
-
     public var debugDescription: String {
         return printable
+    }
+}
+
+extension String {
+    func readableTypeName() -> String {
+        let characterSequence = self.characters
+            .split(separator: ".")
+            .dropFirst() // drop module
+            .joined(separator: [])
+
+        let characters = Array(characterSequence)
+        var expanded = characters.first.flatMap { String($0) } ?? ""
+        characters.suffix(from: 1).forEach { char in
+            if char.isUppercase {
+                expanded.append(" ")
+            }
+
+            expanded.append(char)
+        }
+        
+        return expanded
+    }
+}
+
+extension Character {
+    var isUppercase: Bool {
+        switch self {
+        case "A"..."Z":
+            return true
+        default:
+            return false
+        }
     }
 }
 
@@ -121,7 +155,7 @@ extension Debuggable {
         var print: [String] = []
 
         print.append("\(Self.readableName): \(reason)")
-        print.append("Identifier: \(identifier)")
+        print.append("Identifier: \(fullIdentifier)")
 
         if !possibleCauses.isEmpty {
             print.append("Here are some possible causes: \(possibleCauses.bulletedList)")
