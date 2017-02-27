@@ -174,7 +174,7 @@ extension Debuggable {
     }
 }
 
-extension Array where Element == String {
+extension Sequence where Iterator.Element == String {
     var bulletedList: String {
         return map { "\n- \($0)" } .joined()
     }
