@@ -1,15 +1,15 @@
+import Debugging
+
 enum FooError: String, Error {
     case noFoo
 }
-
-import Debugging
 
 extension FooError: Debuggable {
     static var readableName: String {
         return "Foo Error"
     }
 
-    var instanceIdentifier: String {
+    var identifier: String {
         return rawValue
     }
 
