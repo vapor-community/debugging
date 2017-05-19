@@ -1,6 +1,6 @@
 Pod::Spec.new do |spec|
   spec.name         = 'Debugging'
-  spec.version      = '0.1.0'
+  spec.version      = '1.0.0'
   spec.license      = 'MIT'
   spec.homepage     = 'https://github.com/vapor/debugging'
   spec.authors      = { 'Vapor' => 'contact@vapor.codes' }
