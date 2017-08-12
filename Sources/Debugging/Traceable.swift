@@ -1,5 +1,6 @@
 public protocol Traceable {
     var file: String { get }
+    var function: String { get }
     var line: UInt { get }
     var column: UInt { get }
     var stackTrace: [String] { get }
@@ -13,6 +14,7 @@ extension Traceable {
         case .long:
             var help: [String] = []
             help.append("File: \(file)")
+            help.append(" - func: \(function)")
             help.append(" - line: \(line)")
             help.append(" - column: \(column)")
             if let range = range {

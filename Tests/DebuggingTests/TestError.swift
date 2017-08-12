@@ -10,21 +10,23 @@ struct TestError: Error {
     var kind: Kind
     var reason: String
     var file: String
+    var function: String
     var line: UInt
     var column: UInt
     var stackTrace: [String]
 
-    init(kind: Kind, reason: String, file: String = #file, line: UInt = #line, column: UInt = #column) {
+    init(kind: Kind, reason: String, file: String = #file, function: String = #function, line: UInt = #line, column: UInt = #column) {
         self.kind = kind
         self.reason = reason
         self.file = file
+        self.function = function
         self.line = line
         self.column = column
         self.stackTrace = TestError.makeStackTrace()
     }
 
-    static func foo(reason: String, file: String = #file, line: UInt = #line, column: UInt = #column) -> TestError {
-        return TestError(kind: .foo, reason: reason, file: file, line: line, column: column)
+    static func foo(reason: String, file: String = #file, function: String = #function, line: UInt = #line, column: UInt = #column) -> TestError {
+        return TestError(kind: .foo, reason: reason, file: file, function: function, line: line, column: column)
     }
 }
 
