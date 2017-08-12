@@ -69,8 +69,8 @@ class FooErrorTests: XCTestCase {
 // MARK: - Fixtures
 
 private let expectedPrintable: String = {
-    var expectation = "Foo Error: You do not have a `foo`.\n\n"
-    expectation += "Identifier: DebuggingTests.FooError.noFoo\n\n"
+    var expectation = "⚠️ Foo Error: You do not have a `foo`.\n"
+    expectation += "- id: DebuggingTests.FooError.noFoo\n\n"
 
     expectation += "Here are some possible causes: \n"
     expectation += "- You did not set the flongwaffle.\n"
