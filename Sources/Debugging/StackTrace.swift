@@ -22,11 +22,18 @@ internal struct StackTrace {
                 }
 
                 let string = String(cString: cString)
-                result.append(string)
+                let demangled = _stdlib_demangleName(string)
+                result.append(demangled)
             }
 
             free(cStrings)
-            return result
+            return result.flatMap {
+                guard $0.count > 5 else {
+                    // removes strange empty / garbage lines
+                    return nil
+                }
+                return $0
+            }
         #endif
     }
 }

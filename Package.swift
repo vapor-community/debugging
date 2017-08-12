@@ -7,9 +7,7 @@ let package = Package(
         .library(name: "Debugging", targets: ["Debugging"])
     ],
     dependencies: [
-        #if !os(Linux)
         .package(url: "https://github.com/vapor/cstack.git", .branch("master"))
-        #endif
     ],
     targets: [
         .target(name: "Debugging"),
