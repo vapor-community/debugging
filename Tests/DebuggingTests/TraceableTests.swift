@@ -12,6 +12,9 @@ class TraceableTests: XCTestCase {
             try triggerError()
         } catch {
             print(error)
+            print()
+            print()
+            debugPrint(error)
         }
     }
 

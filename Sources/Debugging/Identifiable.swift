@@ -43,7 +43,7 @@ extension Identifiable {
             print.append("⚠️ \(Self.readableName): \(reason)")
             print.append("- id: \(fullIdentifier)")
         case .short:
-            print.append("⚠️ \(fullIdentifier): \(reason)")
+            print.append("⚠️ [\(fullIdentifier): \(reason)]")
         }
 
         return print.joined(separator: "\n")

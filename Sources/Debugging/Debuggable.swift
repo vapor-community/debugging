@@ -1,12 +1,16 @@
 /// `Debuggable` provides an interface that allows a type
 /// to be more easily debugged in the case of an error.
-public protocol Debuggable: CustomDebugStringConvertible, Identifiable {}
+public protocol Debuggable: CustomDebugStringConvertible, CustomStringConvertible, Identifiable {}
 
 // MARK: Defaults
 
 extension Debuggable {
     public var debugDescription: String {
         return debuggableHelp(format: .long)
+    }
+
+    public var description: String {
+        return debuggableHelp(format: .short)
     }
 }
 
@@ -30,7 +34,7 @@ extension Debuggable {
             print.append(helpable.helpableHelp(format: format))
         }
 
-        if let traceable = self as? Traceable {
+        if let traceable = self as? Traceable, format == .long {
             let lines = ["Stack Trace:"] + traceable.stackTrace
             print.append(lines.joined(separator: "\n"))
         }
@@ -40,7 +44,7 @@ extension Debuggable {
         case .long:
             return print.joined(separator: "\n\n")
         case .short:
-            return print.joined(separator: ". ")
+            return print.joined(separator: " ")
         }
     }
 }

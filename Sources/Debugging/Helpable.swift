@@ -53,14 +53,14 @@ extension Helpable {
 
             return print.joined(separator: "\n\n")
         case .short:
-            var string = ""
+            var string: [String] = []
             if possibleCauses.count > 0 {
-                string += "Possible causes: \(possibleCauses.joined(separator: ","))."
+                string.append("[Possible causes: \(possibleCauses.joined(separator: ","))]")
             }
             if suggestedFixes.count > 0 {
-                string += "Suggested fixes: \(suggestedFixes.joined(separator: ","))"
+                string.append("[Suggested fixes: \(suggestedFixes.joined(separator: ","))]")
             }
-            return string
+            return string.joined(separator: " ")
         }
     }
 }

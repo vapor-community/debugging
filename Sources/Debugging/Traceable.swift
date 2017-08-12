@@ -20,10 +20,11 @@ extension Traceable {
             }
             return help.joined(separator: "\n")
         case .short:
-            var string = "\(file):\(line):\(column)"
+            var string = "[\(file):\(line):\(column)"
             if let range = range {
-                string += " [\(range)]"
+                string += " (\(range))"
             }
+            string += "]"
             return string
         }
 
@@ -32,7 +33,7 @@ extension Traceable {
 
 extension Traceable {
     public static func makeStackTrace() -> [String] {
-        return FrameAddress.getStackTrace()
+        return StackTrace.get()
     }
 }
 
