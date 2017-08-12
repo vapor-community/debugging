@@ -22,6 +22,7 @@ internal struct StackTrace {
                 }
 
                 let string = String(cString: cString)
+                free(cString)
                 let demangled = _stdlib_demangleName(string)
                 result.append(demangled)
             }
