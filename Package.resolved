@@ -1,15 +1,7 @@
 {
   "object": {
     "pins": [
-      {
-        "package": "CStack",
-        "repositoryURL": "https://github.com/vapor/cstack.git",
-        "state": {
-          "branch": "master",
-          "revision": "6de084f98bc9c7ac22bf5d2a12d4888b6add97f0",
-          "version": null
-        }
-      }
+
     ]
   },
   "version": 1

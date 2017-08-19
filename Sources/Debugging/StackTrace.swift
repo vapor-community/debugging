@@ -1,10 +1,9 @@
-#if !os(Linux)
-import CStack
 import Foundation
-#endif
 
 internal struct StackTrace {
     static func get(maxStackSize: Int = 32) -> [String] {
+        return Thread.callStackSymbols
+        /*
         #if os(Linux)
             return ["Stack traces coming to Linux soon."]
         #else
@@ -36,5 +35,6 @@ internal struct StackTrace {
                 return $0
             }
         #endif
+        */
     }
 }
