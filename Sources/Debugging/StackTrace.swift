@@ -2,7 +2,11 @@ import Foundation
 
 internal struct StackTrace {
     static func get(maxStackSize: Int = 32) -> [String] {
-        return Thread.callStackSymbols
+        #if os(Linux)
+            return ["Stack traces not yet available on Linux"]
+        #else
+            return Thread.callStackSymbols
+        #endif
         /*
         #if os(Linux)
             return ["Stack traces coming to Linux soon."]
