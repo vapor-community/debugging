@@ -106,6 +106,9 @@ extension Debuggable {
 extension String {
     func readableTypeName() -> String {
         let characterSequence = toCharacterSequence()
+                                .split(separator: ".")
+                                .dropFirst()
+                                .joined(separator: [])
         
         let characters = Array(characterSequence)
         guard var expanded = characters.first.flatMap({ String($0) }) else { return "" }
