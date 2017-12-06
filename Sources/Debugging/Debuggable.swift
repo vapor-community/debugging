@@ -105,11 +105,17 @@ extension Debuggable {
 
 extension String {
     func readableTypeName() -> String {
+    #if swift(>=4.0)
         let characterSequence = self
             .split(separator: ".")
             .dropFirst() // drop module
             .joined(separator: [])
-
+    #else
+        let characterSequence = self.characters
+            .split(separator: ".")
+            .dropFirst() // drop module
+            .joined(separator: [])
+    #endif
         let characters = Array(characterSequence)
         guard var expanded = characters.first.flatMap({ String($0) }) else { return "" }
         
