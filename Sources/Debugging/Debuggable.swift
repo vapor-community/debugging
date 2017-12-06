@@ -105,14 +105,14 @@ extension Debuggable {
 
 extension String {
     func readableTypeName() -> String {
-        let characterSequence = self.characters
-            .split(separator: ".")
-            .dropFirst() // drop module
-            .joined(separator: [])
+        let characterSequence = toCharacterSequence()
+                                .split(separator: ".")
+                                .dropFirst() // drop module
+                                .joined(separator: [])
 
         let characters = Array(characterSequence)
         guard var expanded = characters.first.flatMap({ String($0) }) else { return "" }
-        
+
         characters.suffix(from: 1).forEach { char in
             if char.isUppercase {
                 expanded.append(" ")
@@ -123,6 +123,16 @@ extension String {
 
         return expanded
     }
+    #if swift(>=4.0)
+    private func toCharacterSequence() -> String {
+        return self
+    }
+    #else
+    private func toCharacterSequence() -> CharacterView {
+        return self.characters
+    }
+    #endif
+
 }
 
 extension Character {
