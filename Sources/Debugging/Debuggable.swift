@@ -105,7 +105,7 @@ extension Debuggable {
 
 extension String {
     func readableTypeName() -> String {
-        let characterSequence = self.characters
+        let characterSequence = self
             .split(separator: ".")
             .dropFirst() // drop module
             .joined(separator: [])
