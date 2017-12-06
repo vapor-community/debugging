@@ -107,9 +107,9 @@ extension String {
     func readableTypeName() -> String {
         let characterSequence = toCharacterSequence()
                                 .split(separator: ".")
-                                .dropFirst()
+                                .dropFirst() // drop module
                                 .joined(separator: [])
-        
+
         let characters = Array(characterSequence)
         guard var expanded = characters.first.flatMap({ String($0) }) else { return "" }
 
@@ -117,7 +117,7 @@ extension String {
             if char.isUppercase {
                 expanded.append(" ")
             }
-            
+
             expanded.append(char)
         }
 
